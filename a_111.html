@@ -99,11 +99,11 @@
                     <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-6 text-shadow">校园活动信息平台</h1>
                     <p class="text-[clamp(1rem,2vw,1.25rem)] mb-8 opacity-90">发现精彩校园活动，参与其中，拓展人脉，丰富大学生活</p>
                     <div class="flex flex-col sm:flex-row justify-center gap-4">
-                        <button class="px-6 py-3 bg-white text-primary rounded-lg font-medium hover:bg-opacity-90 transition-custom shadow-lg">
-                            <a href="#activities">探索活动</a>
+                        <button id="exploreBtn" class="px-6 py-3 bg-white text-primary rounded-lg font-medium hover:bg-opacity-90 transition-custom shadow-lg">
+                            探索活动
                         </button>
-                        <button class="px-6 py-3 bg-transparent border-2 border-white text-white rounded-lg font-medium hover:bg-white/10 transition-custom">
-                            <a href="#statistics">查看数据统计</a>
+                        <button id="statsBtn" class="px-6 py-3 bg-transparent border-2 border-white text-white rounded-lg font-medium hover:bg-white/10 transition-custom">
+                            查看数据统计
                         </button>
                     </div>
                 </div>
@@ -564,7 +564,10 @@
 
             // 模拟活动详情页链接
             document.getElementById('exploreBtn').addEventListener('click', function() {
-                window.location.href = 'activity-list.html';
+                window.scrollTo({
+                    top: document.getElementById('activities').offsetTop - 80,
+                    behavior: 'smooth'
+                });
             });
 
             document.getElementById('statsBtn').addEventListener('click', function() {
