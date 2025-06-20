@@ -1,0 +1,12 @@
+@layer utilities {
+  .content-auto {
+    content-visibility: auto;
+  }
+  .transition-custom {
+    transition: all 0.3s ease;
+  }
+  .bg-glass {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+  }
+}    
