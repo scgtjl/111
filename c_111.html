@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>活动信息列表 - 校园活动信息平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="c2.css" rel="stylesheet">
+    <script src="c1.js"></script>
+</head>
+
+<body class="font-inter bg-light-1 text-dark">
+    <!-- 导航栏（与主平台一致） -->
+    <header class="fixed w-full top-0 z-50 transition-all duration-300 bg-white shadow-sm">
+        <div class="bg-glass shadow-sm">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center py-4">
+                    <div class="flex items-center">
+                        <a href="#" class="flex items-center">
+                            <div class="h-10 w-10 rounded-lg bg-primary flex items-center justify-center">
+                                <i class="fa fa-calendar-check-o text-white text-xl"></i>
+                            </div>
+                            <span class="ml-2 text-xl font-bold text-dark">活动信息列表</span>
+                        </a>
+                    </div>
+
+                    <!-- 桌面导航 -->
+                    <nav class="hidden md:flex space-x-8">
+                        <a href="a_111.html" class="text-dark-2 hover:text-primary font-medium transition-custom">首页</a>
+                        <a href="#" class="text-dark-2 hover:text-primary font-medium transition-custom border-b-2 border-primary">活动列表</a>
+                    </nav>
+
+                    <!-- 用户区域 -->
+                    <div class="flex items-center">
+                        <div class="relative">
+                            <button class="flex items-center focus:outline-none">
+                                <img src="https://picsum.photos/id/1005/40/40" alt="用户头像" class="h-8 w-8 rounded-full object-cover">
+                                <i class="fa fa-chevron-down ml-1 text-xs text-dark-2 hidden md:block"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 移动端菜单按钮 -->
+                    <div class="md:hidden ml-4">
+                        <button id="mobileMenuBtn" class="text-dark hover:text-primary focus:outline-none">
+                            <i class="fa fa-bars text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 移动端导航菜单 -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-light-2">
+            <div class="container mx-auto px-4 py-3 space-y-3">
+                <a href="index.html" class="block py-2 text-dark-2 hover:text-primary font-medium transition-custom">首页</a>
+                <a href="#" class="block py-2 text-dark-2 hover:text-primary font-medium transition-custom">活动列表</a>
+                <a href="data-visualization.html" class="block py-2 text-dark-2 hover:text-primary font-medium transition-custom">数据统计</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-16 pb-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+                <div>
+                    <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-dark mb-2">活动信息列表</h2>
+                    <p class="text-dark-2">查看和管理所有校园活动信息，支持新增和编辑</p>
+                </div>
+                <button id="addActivityBtn" class="mt-4 md:mt-0 px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-custom shadow-lg">
+                    <i class="fa fa-plus mr-2"></i>新增活动
+                </button>
+            </div>
+
+            <!-- 筛选和搜索 -->
+            <div class="bg-white p-4 rounded-xl shadow-sm mb-8">
+                <div class="flex flex-wrap gap-4">
+                    <div class="w-full md:w-auto">
+                        <label for="activityType" class="block text-sm font-medium text-dark-2 mb-1">活动类型</label>
+                        <select id="activityType" class="w-full md:w-48 px-4 py-2 border border-light-2 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
+                            <option value="all">全部类型</option>
+                            <option value="academic">学术讲座</option>
+                            <option value="culture">文体活动</option>
+                            <option value="volunteer">志愿公益</option>
+                            <option value="tech">科技创新</option>
+                            <option value="competition">竞赛比赛</option>
+                        </select>
+                    </div>
+                    <div class="w-full md:w-auto">
+                        <label for="activityTime" class="block text-sm font-medium text-dark-2 mb-1">时间范围</label>
+                        <select id="activityTime" class="w-full md:w-48 px-4 py-2 border border-light-2 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
+                            <option value="all">全部时间</option>
+                            <option value="today">今天</option>
+                            <option value="week">本周</option>
+                            <option value="month">本月</option>
+                            <option value="future">未来</option>
+                        </select>
+                    </div>
+                    <div class="w-full md:w-auto">
+                        <label for="activityCollege" class="block text-sm font-medium text-dark-2 mb-1">学院</label>
+                        <select id="activityCollege" class="w-full md:w-48 px-4 py-2 border border-light-2 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
+                            <option value="all">全部学院</option>
+                            <option value="computer">计算机学院</option>
+                            <option value="business">商学院</option>
+                            <option value="art">艺术学院</option>
+                            <option value="science">理学院</option>
+                            <option value="engineering">工学院</option>
+                        </select>
+                    </div>
+                    <div class="w-full md:flex-1 flex items-end">
+                        <label class="block text-sm font-medium text-dark-2 mb-1 w-full">搜索</label>
+                        <div class="relative w-full">
+                            <input type="text" id="searchActivity" placeholder="搜索活动名称、地点..." class="w-full px-4 py-2 pl-10 border border-light-2 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
+                            <i class="fa fa-search absolute left-3 top-3 text-dark-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 活动列表 -->
+            <div class="bg-white rounded-xl shadow-card mb-8">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-light-2">
+                        <thead class="bg-light-1">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-dark-2 uppercase tracking-wider">活动ID</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-dark-2 uppercase tracking-wider">活动名称</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-dark-2 uppercase tracking-wider">类型</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-dark-2 uppercase tracking-wider">日期</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-dark-2 uppercase tracking-wider">地点</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-dark-2 uppercase tracking-wider">参与人数</th>
+                                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-dark-2 uppercase tracking-wider">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-light-2" id="activityList">
+                            <!-- 活动列表项将通过JS动态生成 -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 空状态提示 -->
+                <div id="emptyActivityList" class="py-12 text-center hidden">
+                    <div class="mx-auto w-16 h-16 flex items-center justify-center rounded-full bg-light-1 mb-4">
+                        <i class="fa fa-info-circle text-2xl text-dark-2"></i>
+                    </div>
+                    <h3 class="text-lg font-medium text-dark mb-2">暂无活动信息</h3>
+                    <p class="text-dark-2">当前没有活动数据，点击"新增活动"按钮添加第一条活动</p>
+                    <button id="addFirstActivityBtn" class="mt-4 px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-custom">
+                        <i class="fa fa-plus mr-2"></i>添加第一条活动
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 新增/编辑活动模态框 -->
+    <div id="activityModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-lg w-full max-w-2xl mx-4 transform transition-all duration-300 scale-95 opacity-0" id="activityModalContent">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 id="modalTitle" class="text-xl font-bold">新增活动</h3>
+                    <button id="closeActivityModal" class="text-dark-2 hover:text-dark">
+                        <i class="fa fa-times text-xl"></i>
+                    </button>
+                </div>
+
+                <form id="activityForm" class="space-y-4">
+                    <input type="hidden" id="activityId" value="">
+
+                    <div>
+                        <label for="activityTitle" class="block text-sm font-medium text-dark-2 mb-1">活动名称</label>
+                        <input type="text" id="activityTitle" class="w-full px-4 py-2 border border-light-2 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" required>
+                    </div>
+
+                    <div>
+                        <label for="activityType" class="block text-sm font-medium text-dark-2 mb-1">活动类型</label>
+                        <select id="modalActivityType" class="w-full px-4 py-2 border border-light-2 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" required>
+                            <option value="academic">学术讲座</option>
+                            <option value="culture">文体活动</option>
+                            <option value="volunteer">志愿公益</option>
+                            <option value="tech">科技创新</option>
+                            <option value="competition">竞赛比赛</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="activityDate" class="block text-sm font-medium text-dark-2 mb-1">活动日期</label>
+                        <input type="date" id="activityDate" class="w-full px-4 py-2 border border-light-2 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" required>
+                    </div>
+
+                    <div>
+                        <label for="activityTime" class="block text-sm font-medium text-dark-2 mb-1">活动时间</label>
+                        <input type="time" id="activityTime" class="w-full px-4 py-2 border border-light-2 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" required>
+                    </div>
+
+                    <div>
+                        <label for="activityLocation" class="block text-sm font-medium text-dark-2 mb-1">活动地点</label>
+                        <input type="text" id="activityLocation" class="w-full px-4 py-2 border border-light-2 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" required>
+                    </div>
+
+                    <div>
+                        <label for="activityOrganizer" class="block text-sm font-medium text-dark-2 mb-1">主办方</label>
+                        <input type="text" id="activityOrganizer" class="w-full px-4 py-2 border border-light-2 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" required>
+                    </div>
+
+                    <div>
+                        <label for="activityCapacity" class="block text-sm font-medium text-dark-2 mb-1">活动人数</label>
+                        <input type="number" id="activityCapacity" class="w-full px-4 py-2 border border-light-2 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" required>
+                    </div>
+
+                    <div>
+                        <label for="activityDescription" class="block text-sm font-medium text-dark-2 mb-1">活动描述</label>
+                        <textarea id="activityDescription" rows="3" class="w-full px-4 py-2 border border-light-2 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" placeholder="请详细描述活动内容..."></textarea>
+                    </div>
+
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" id="cancelActivityBtn" class="px-6 py-3 bg-light-2 text-dark-2 rounded-lg font-medium hover:bg-light-1 transition-custom">
+                            取消
+                        </button>
+                        <button type="submit" class="px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-custom">
+                            <i id="submitIcon" class="fa fa-save mr-2"></i>保存
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 活动详情模态框 -->
+    <div id="detailModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-lg w-full max-w-3xl mx-4 transform transition-all duration-300 scale-95 opacity-0" id="detailModalContent">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 id="detailTitle" class="text-xl font-bold">活动详情</h3>
+                    <button id="closeDetailModal" class="text-dark-2 hover:text-dark">
+                        <i class="fa fa-times text-xl"></i>
+                    </button>
+                </div>
+
+                <div id="detailContent" class="space-y-4">
+                    <!-- 详情内容将通过JS动态生成 -->
+                </div>
+
+                <div class="flex justify-end mt-6 space-x-3">
+                    <button id="closeDetailBtn" class="px-6 py-3 bg-light-2 text-dark-2 rounded-lg font-medium hover:bg-light-1 transition-custom">
+                        关闭
+                    </button>
+                    <button id="editDetailBtn" class="px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-custom">
+                        编辑活动
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 初始化示例数据
+        function initSampleData() {
+            // 检查活动数据是否存在，不存在则初始化
+            if (!localStorage.getItem('activities')) {
+                const activities = [{
+                    id: 1,
+                    title: "人工智能前沿讲座",
+                    type: "academic",
+                    date: "2025-06-20",
+                    time: "14:00-16:00",
+                    location: "图书馆报告厅",
+                    organizer: "计算机学院",
+                    capacity: 200,
+                    participants: 128,
+                    description: "本次讲座将邀请人工智能领域专家分享最新研究成果和应用案例，包括机器学习、自然语言处理和计算机视觉等方向的前沿技术。",
+                    image: "https://picsum.photos/400/300?random=10"
+                }, {
+                    id: 2,
+                    title: "校园歌手大赛海选",
+                    type: "culture",
+                    date: "2025-06-18",
+                    time: "18:30-21:30",
+                    location: "大礼堂",
+                    organizer: "学生会文艺部",
+                    capacity: 150,
+                    participants: 85,
+                    description: "展现音乐才华，争夺晋级名额！校园歌手大赛海选环节，期待你的精彩表现。",
+                    image: "https://picsum.photos/400/300?random=11"
+                }];
+                localStorage.setItem('activities', JSON.stringify(activities));
+            }
+        }
+
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化示例数据
+            initSampleData();
+
+            // 初始化导航栏
+            initNavbar();
+
+            // 初始化移动端菜单
+            initMobileMenu();
+
+            // 加载活动数据
+            loadActivityData();
+
+            // 初始化新增/编辑模态框
+            initActivityModal();
+
+            // 初始化详情模态框
+            initDetailModal();
+
+            // 筛选和搜索功能
+            initFilterAndSearch();
+
+            // 模拟从数据可视化页面跳转
+            simulateJumpFromDataVisualization();
+        });
+
+        // 模拟从数据可视化页面跳转
+        function simulateJumpFromDataVisualization() {
+            // 检查是否有活动ID参数（模拟从详情页跳转）
+            const urlParams = new URLSearchParams(window.location.search);
+            const activityId = urlParams.get('activityId');
+
+            if (activityId) {
+                viewActivityDetail(activityId);
+            }
+        }
+
+        // 初始化导航栏
+        function initNavbar() {
+            const header = document.querySelector('header');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    header.classList.remove('bg-glass');
+                    header.classList.add('bg-white');
+                } else {
+                    header.classList.add('bg-glass');
+                    header.classList.remove('bg-white');
+                }
+            });
+        }
+
+        // 初始化移动端菜单
+        function initMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+
+            mobileMenuBtn.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+        // 加载活动数据
+        function loadActivityData() {
+            try {
+                let activities = JSON.parse(localStorage.getItem('activities')) || [];
+                renderActivityList(activities);
+            } catch (error) {
+                console.error('加载活动数据失败:', error);
+                showToast('加载数据失败，请稍后重试');
+            }
+        }
+
+        // 渲染活动列表
+        function renderActivityList(activities) {
+            const listEl = document.getElementById('activityList');
+            const emptyEl = document.getElementById('emptyActivityList');
+
+            listEl.innerHTML = '';
+            emptyEl.classList.add('hidden');
+
+            if (activities.length === 0) {
+                emptyEl.classList.remove('hidden');
+                return;
+            }
+
+            activities.forEach(activity => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-light-1/50 transition-colors';
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-dark-2">
+                        ${activity.id}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-dark">${activity.title}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getTypeClass(activity.type)}">
+                            ${getTypeName(activity.type)}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-dark-2">
+                        ${activity.date} ${activity.time}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-dark-2">
+                        ${activity.location}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <span class="text-primary font-medium">${activity.participants}</span> / ${activity.capacity}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button class="text-primary hover:text-primary/80 mr-3" onclick="viewActivityDetail(${activity.id})">
+                            <i class="fa fa-eye"></i> 查看
+                        </button>
+                        <button class="text-primary hover:text-primary/80 mr-3" onclick="editActivity(${activity.id})">
+                            <i class="fa fa-pencil"></i> 编辑
+                        </button>
+                        <button class="text-danger hover:text-danger/80" onclick="deleteActivity(${activity.id})">
+                            <i class="fa fa-trash"></i> 删除
+                        </button>
+                    </td>
+                `;
+                listEl.appendChild(row);
+            });
+        }
+
+        // 获取活动类型显示名称
+        function getTypeName(type) {
+            const types = {
+                'academic': '学术讲座',
+                'culture': '文体活动',
+                'volunteer': '志愿公益',
+                'tech': '科技创新',
+                'competition': '竞赛比赛'
+            };
+            return types[type] || type;
+        }
+
+        // 获取活动类型样式类
+        function getTypeClass(type) {
+            const classes = {
+                'academic': 'bg-blue-100 text-blue-800',
+                'culture': 'bg-green-100 text-green-800',
+                'volunteer': 'bg-yellow-100 text-yellow-800',
+                'tech': 'bg-purple-100 text-purple-800',
+                'competition': 'bg-red-100 text-red-800'
+            };
+            return classes[type] || 'bg-gray-100 text-gray-800';
+        }
+
+        // 初始化活动模态框
+        function initActivityModal() {
+            const modal = document.getElementById('activityModal');
+            const modalContent = document.getElementById('activityModalContent');
+            const addBtn = document.getElementById('addActivityBtn');
+            const addFirstBtn = document.getElementById('addFirstActivityBtn');
+            const closeBtn = document.getElementById('closeActivityModal');
+            const cancelBtn = document.getElementById('cancelActivityBtn');
+            const form = document.getElementById('activityForm');
+
+            // 打开新增模态框
+            addBtn.addEventListener('click', function() {
+                openAddActivityModal();
+            });
+
+            addFirstBtn.addEventListener('click', function() {
+                openAddActivityModal();
+            });
+
+            // 关闭模态框
+            closeBtn.addEventListener('click', function() {
+                closeActivityModal();
+            });
+
+            cancelBtn.addEventListener('click', function() {
+                closeActivityModal();
+            });
+
+            // 点击模态框外部关闭
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeActivityModal();
+                }
+            });
+
+            // 表单提交
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveActivity();
+            });
+
+            // 初始化日期为今天
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('activityDate').value = today;
+        }
+
+        // 打开新增活动模态框
+        function openAddActivityModal() {
+            const modal = document.getElementById('activityModal');
+            const modalContent = document.getElementById('activityModalContent');
+            const modalTitle = document.getElementById('modalTitle');
+            const submitIcon = document.getElementById('submitIcon');
+
+            modalTitle.textContent = '新增活动';
+            submitIcon.className = 'fa fa-save mr-2';
+            document.getElementById('activityId').value = '';
+            document.getElementById('activityTitle').value = '';
+            document.getElementById('modalActivityType').value = 'academic';
+            document.getElementById('activityDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('activityTime').value = '14:00';
+            document.getElementById('activityLocation').value = '';
+            document.getElementById('activityOrganizer').value = '';
+            document.getElementById('activityCapacity').value = '100';
+            document.getElementById('activityDescription').value = '';
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        // 打开编辑活动模态框
+        function editActivity(id) {
+            const activities = JSON.parse(localStorage.getItem('activities')) || [];
+            const activity = activities.find(act => act.id === id);
+
+            if (activity) {
+                const modal = document.getElementById('activityModal');
+                const modalContent = document.getElementById('activityModalContent');
+                const modalTitle = document.getElementById('modalTitle');
+                const submitIcon = document.getElementById('submitIcon');
+
+                modalTitle.textContent = '编辑活动';
+                submitIcon.className = 'fa fa-pencil mr-2';
+                document.getElementById('activityId').value = activity.id;
+                document.getElementById('activityTitle').value = activity.title;
+                document.getElementById('modalActivityType').value = activity.type;
+                document.getElementById('activityDate').value = activity.date;
+                document.getElementById('activityTime').value = activity.time;
+                document.getElementById('activityLocation').value = activity.location;
+                document.getElementById('activityOrganizer').value = activity.organizer;
+                document.getElementById('activityCapacity').value = activity.capacity;
+                document.getElementById('activityDescription').value = activity.description;
+
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modalContent.classList.remove('scale-95', 'opacity-0');
+                    modalContent.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            }
+        }
+
+        // 关闭活动模态框
+        function closeActivityModal() {
+            const modalContent = document.getElementById('activityModalContent');
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                document.getElementById('activityModal').classList.add('hidden');
+            }, 300);
+        }
+
+        // 保存活动
+        function saveActivity() {
+            try {
+                const id = document.getElementById('activityId').value;
+                const title = document.getElementById('activityTitle').value;
+                const type = document.getElementById('modalActivityType').value;
+                const date = document.getElementById('activityDate').value;
+                const time = document.getElementById('activityTime').value;
+                const location = document.getElementById('activityLocation').value;
+                const organizer = document.getElementById('activityOrganizer').value;
+                const capacity = parseInt(document.getElementById('activityCapacity').value);
+                const description = document.getElementById('activityDescription').value;
+
+
+
+                let activities = JSON.parse(localStorage.getItem('activities')) || [];
+                const now = new Date().toISOString();
+
+                if (id) {
+                    // 编辑现有活动
+                    const index = activities.findIndex(act => act.id === parseInt(id));
+                    if (index !== -1) {
+                        activities[index] = {
+                            ...activities[index],
+                            title,
+                            type,
+                            date,
+                            time,
+                            location,
+                            organizer,
+                            capacity,
+                            description,
+                            updateTime: now
+                        };
+                        showToast('活动更新成功');
+                    }
+                } else {
+                    // 新增活动
+                    const newId = activities.length > 0 ? Math.max(...activities.map(act => act.id)) + 1 : 1;
+                    activities.push({
+                        id: newId,
+                        title,
+                        type,
+                        date,
+                        time,
+                        location,
+                        organizer,
+                        capacity,
+                        participants: 0,
+                        description,
+                        createTime: now,
+                        updateTime: now,
+                        image: `https://picsum.photos/400/300?random=${newId}`
+                    });
+                    showToast('活动创建成功');
+                }
+
+                localStorage.setItem('activities', JSON.stringify(activities));
+                closeActivityModal();
+                loadActivityData();
+            } catch (error) {
+                console.error('保存活动失败:', error);
+                showToast('保存失败，请稍后重试');
+            }
+        }
+
+        // 删除活动
+        function deleteActivity(id) {
+            if (confirm('确定要删除该活动吗？此操作不可撤销，相关数据将一并删除。')) {
+                try {
+                    let activities = JSON.parse(localStorage.getItem('activities')) || [];
+                    activities = activities.filter(act => act.id !== id);
+                    localStorage.setItem('activities', JSON.stringify(activities));
+                    showToast('活动已删除');
+                    loadActivityData();
+                } catch (error) {
+                    console.error('删除活动失败:', error);
+                    showToast('删除失败，请稍后重试');
+                }
+            }
+        }
+
+        // 初始化详情模态框
+        function initDetailModal() {
+            const modal = document.getElementById('detailModal');
+            const modalContent = document.getElementById('detailModalContent');
+            const closeBtn = document.getElementById('closeDetailModal');
+            const closeDetailBtn = document.getElementById('closeDetailBtn');
+            const editDetailBtn = document.getElementById('editDetailBtn');
+
+            // 关闭模态框
+            closeBtn.addEventListener('click', function() {
+                closeDetailModal();
+            });
+
+            closeDetailBtn.addEventListener('click', function() {
+                closeDetailModal();
+            });
+
+            // 编辑按钮
+            editDetailBtn.addEventListener('click', function() {
+                closeDetailModal();
+                const activityId = document.getElementById('detailActivityId').textContent;
+                editActivity(activityId);
+            });
+
+            // 点击模态框外部关闭
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeDetailModal();
+                }
+            });
+        }
+
+        // 查看活动详情
+        function viewActivityDetail(id) {
+            const activities = JSON.parse(localStorage.getItem('activities')) || [];
+            const activity = activities.find(act => act.id === id);
+
+            if (activity) {
+                const detailContent = document.getElementById('detailContent');
+                const typeClass = getTypeClass(activity.type);
+                const typeName = getTypeName(activity.type);
+
+                detailContent.innerHTML = `
+                    <input type="hidden" id="detailActivityId" value="${activity.id}">
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="text-sm font-medium text-dark-2 mb-1">活动ID</h4>
+                            <p class="text-dark font-medium">${activity.id}</p>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-dark-2 mb-1">创建时间</h4>
+                            <p class="text-dark">${activity.createTime ? new Date(activity.createTime).toLocaleString() : '未知'}</p>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-dark-2 mb-1">更新时间</h4>
+                            <p class="text-dark">${activity.updateTime ? new Date(activity.updateTime).toLocaleString() : '未知'}</p>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-dark-2 mb-1">活动类型</h4>
+                            <p><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${typeClass}">${typeName}</span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <h4 class="text-sm font-medium text-dark-2 mb-1">活动名称</h4>
+                        <p class="text-dark text-xl font-bold">${activity.title}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                        <div>
+                            <h4 class="text-sm font-medium text-dark-2 mb-1">活动日期</h4>
+                            <p class="text-dark">${activity.date} ${activity.time}</p>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-dark-2 mb-1">活动地点</h4>
+                            <p class="text-dark">${activity.location}</p>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-dark-2 mb-1">主办方</h4>
+                            <p class="text-dark">${activity.organizer}</p>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-dark-2 mb-1">参与情况</h4>
+                            <p class="text-dark"><span class="text-primary font-bold">${activity.participants}</span> / ${activity.capacity}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <h4 class="text-sm font-medium text-dark-2 mb-1">活动描述</h4>
+                        <p class="text-dark whitespace-pre-wrap">${activity.description}</p>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <h4 class="text-sm font-medium text-dark-2 mb-1">活动图片</h4>
+                        <img src="${activity.image}" alt="${activity.title}" class="w-full h-64 object-cover rounded-lg shadow-card">
+                    </div>
+                `;
+
+                const modal = document.getElementById('detailModal');
+                const modalContent = document.getElementById('detailModalContent');
+
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modalContent.classList.remove('scale-95', 'opacity-0');
+                    modalContent.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            }
+        }
+
+        // 关闭详情模态框
+        function closeDetailModal() {
+            const modalContent = document.getElementById('detailModalContent');
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                document.getElementById('detailModal').classList.add('hidden');
+            }, 300);
+        }
+
+        // 筛选和搜索功能
+        function initFilterAndSearch() {
+            const typeFilter = document.getElementById('activityType');
+            const timeFilter = document.getElementById('activityTime');
+            const collegeFilter = document.getElementById('activityCollege');
+            const searchInput = document.getElementById('searchActivity');
+
+            typeFilter.addEventListener('change', filterActivities);
+            timeFilter.addEventListener('change', filterActivities);
+            collegeFilter.addEventListener('change', filterActivities);
+            searchInput.addEventListener('input', filterActivities);
+        }
+
+        // 筛选活动
+        function filterActivities() {
+            try {
+                const type = document.getElementById('activityType').value;
+                const time = document.getElementById('activityTime').value;
+                const college = document.getElementById('activityCollege').value;
+                const search = document.getElementById('searchActivity').value.toLowerCase();
+
+                let activities = JSON.parse(localStorage.getItem('activities')) || [];
+
+                // 类型筛选
+                if (type !== 'all') {
+                    activities = activities.filter(act => act.type === type);
+                }
+
+                // 时间筛选
+                if (time !== 'all') {
+                    const today = new Date();
+                    const todayDate = today.toISOString().split('T')[0];
+                    const thisWeek = new Date(today - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+                    const thisMonth = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+
+                    activities = activities.filter(act => {
+                        if (time === 'today' && act.date === todayDate) return true;
+                        if (time === 'week' && act.date >= thisWeek) return true;
+                        if (time === 'month' && act.date >= thisMonth) return true;
+                        if (time === 'future' && act.date >= todayDate) return true;
+                        return false;
+                    });
+                }
+
+                // 学院筛选（简化处理，实际项目中应存储学院信息）
+                if (college !== 'all' && college === 'computer') {
+                    activities = activities.filter(act => act.organizer.includes('计算机学院'));
+                } else if (college !== 'all' && college === 'business') {
+                    activities = activities.filter(act => act.organizer.includes('商学院'));
+                } else if (college !== 'all' && college === 'art') {
+                    activities = activities.filter(act => act.organizer.includes('艺术学院'));
+                } else if (college !== 'all' && college === 'science') {
+                    activities = activities.filter(act => act.organizer.includes('理学院'));
+                } else if (college !== 'all' && college === 'engineering') {
+                    activities = activities.filter(act => act.organizer.includes('工学院'));
+                }
+
+                // 搜索筛选
+                if (search) {
+                    activities = activities.filter(act =>
+                        act.title.toLowerCase().includes(search) ||
+                        act.location.toLowerCase().includes(search) ||
+                        act.organizer.toLowerCase().includes(search) ||
+                        act.description.toLowerCase().includes(search)
+                    );
+                }
+
+                renderActivityList(activities);
+            } catch (error) {
+                console.error('筛选活动失败:', error);
+                showToast('筛选失败，请稍后重试');
+            }
+        }
+
+        // 显示提示消息
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-4 right-4 bg-dark text-white px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 translate-y-10 opacity-0 z-50';
+            toast.textContent = message;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-10', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // indexedDB扩展方案（可选）
+        async function saveActivityWithIndexedDB(activity) {
+            try {
+                const db = await initDB();
+                let newId;
+
+                if (!activity.id) {
+                    newId = await getNextId(db);
+                    activity.id = newId;
+                }
+
+                return new Promise((resolve, reject) => {
+                    const transaction = db.transaction(['activities'], 'readwrite');
+                    const store = transaction.objectStore('activities');
+
+                    if (activity.id) {
+                        store.put(activity);
+                    } else {
+                        store.add(activity);
+                    }
+
+                    transaction.oncomplete = () => {
+                        db.close();
+                        resolve(activity);
+                    };
+
+                    transaction.onerror = () => {
+                        db.close();
+                        reject('保存失败');
+                    };
+                });
+            } catch (error) {
+                console.error('indexedDB保存失败:', error);
+                throw error;
+            }
+        }
+
+        // 初始化indexedDB
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open('CampusActivityDB', 1);
+
+                request.onerror = () => reject('打开数据库失败');
+
+                request.onsuccess = (event) => {
+                    const db = event.target.result;
+                    resolve(db);
+                };
+
+                request.onupgradeneeded = (event) => {
+                    const db = event.target.result;
+                    if (!db.objectStoreNames.contains('activities')) {
+                        db.createObjectStore('activities', {
+                            keyPath: 'id'
+                        });
+                    }
+                };
+            });
+        }
+
+        // 获取下一个ID
+        function getNextId(db) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction(['activities'], 'readonly');
+                const store = transaction.objectStore('activities');
+                const request = store.getAllKeys();
+
+                request.onsuccess = (event) => {
+                    const keys = event.target.result;
+                    resolve(keys.length > 0 ? Math.max(...keys) + 1 : 1);
+                };
+
+                request.onerror = () => {
+                    reject(1);
+                };
+            });
+        }
+    </script>
+</body>
+
+</html>
