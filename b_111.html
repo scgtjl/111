@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>用户详情 - 校园活动信息平台</title>
+        <!-- 引入Tailwind、Font Awesome等依赖（同首页） -->
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link href="b2.css" rel="stylesheet">
+        <script src="b1.js"></script>
+    </head>
+</head>
+
+<body class="font-inter bg-light-1 text-dark">
+    <!-- 导航栏（同首页） -->
+    <header class="fixed w-full top-0 z-50 transition-all duration-300 bg-white shadow-sm">
+        <!-- 导航栏内容，包含用户登录状态显示 -->
+    </header>
+
+    <main class="pt-16 pb-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row gap-8 mt-10">
+                <!-- 左侧用户信息卡片 -->
+                <div class="w-full md:w-1/4 bg-white p-6 rounded-xl shadow-card">
+                    <div class="text-center mb-6">
+                        <img id="userAvatarDetail" src="https://picsum.photos/100/100?random=1" alt="用户头像" class="w-32 h-32 rounded-full mx-auto object-cover border-4 border-light-2">
+                        <h2 id="userNameDetail" class="text-2xl font-bold mt-4">张三</h2>
+                        <p id="userCollege" class="text-dark-2">计算机学院</p>
+                    </div>
+
+                    <div class="space-y-4 mt-6">
+                        <div class="flex items-center">
+                            <i class="fa fa-id-card text-primary w-6 text-center"></i>
+                            <span id="userId">学号：20230101</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fa fa-calendar text-primary w-6 text-center"></i>
+                            <span id="userRegDate">注册时间：2023-09-01</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fa fa-ticket text-primary w-6 text-center"></i>
+                            <span id="activityCount">参与活动：12 场</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fa fa-clock-o text-primary w-6 text-center"></i>
+                            <span id="loginCount">登录次数：36 次</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-8">
+                        <button id="editProfileBtn" class="w-full py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-custom">
+                            <i class="fa fa-edit mr-2"></i>编辑资料
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 右侧用户动态与记录 -->
+                <div class="w-full md:w-3/4">
+                    <!-- 用户动态标签页 -->
+                    <div class="bg-white p-6 rounded-xl shadow-card mb-8">
+                        <div class="flex border-b border-light-2">
+                            <button class="dynamic-tab px-6 py-3 font-medium text-primary border-b-2 border-primary" data-tab="activities">
+                                参与活动
+                            </button>
+                            <button class="dynamic-tab px-6 py-3 font-medium text-dark-2 hover:text-primary" data-tab="actions">
+                                操作记录
+                            </button>
+                            <button class="dynamic-tab px-6 py-3 font-medium text-dark-2 hover:text-primary" data-tab="favorites">
+                                收藏活动
+                            </button>
+                        </div>
+
+                        <!-- 参与活动标签页内容 -->
+                        <div id="activitiesTab" class="dynamic-content pt-6">
+                            <h3 class="text-lg font-semibold mb-4">最近参与的活动</h3>
+                            <div id="participatedActivities" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <!-- 活动卡片将通过JS动态生成 -->
+                            </div>
+                        </div>
+
+                        <!-- 操作记录标签页内容（默认隐藏） -->
+                        <div id="actionsTab" class="dynamic-content pt-6 hidden">
+                            <h3 class="text-lg font-semibold mb-4">操作记录</h3>
+                            <div id="actionRecords" class="space-y-3">
+                                <!-- 记录将通过JS动态生成 -->
+                            </div>
+                        </div>
+
+                        <!-- 收藏活动标签页内容（默认隐藏） -->
+                        <div id="favoritesTab" class="dynamic-content pt-6 hidden">
+                            <h3 class="text-lg font-semibold mb-4">收藏的活动</h3>
+                            <div id="favoriteActivities" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <!-- 活动卡片将通过JS动态生成 -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 用户使用统计图表 -->
+                    <div class="bg-white p-6 rounded-xl shadow-card">
+                        <h3 class="text-lg font-semibold mb-4">活动参与统计</h3>
+                        <div class="h-80">
+                            <canvas id="activityStatsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 编辑资料模态框 -->
+    <div id="editProfileModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-lg w-full max-w-md mx-4 transform transition-all duration-300 scale-95 opacity-0" id="editModalContent">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold">编辑个人资料</h3>
+                    <button id="closeEditModal" class="text-dark-2 hover:text-dark">
+                        <i class="fa fa-times text-xl"></i>
+                    </button>
+                </div>
+
+                <form id="editProfileForm">
+                    <div class="mb-4">
+                        <label for="editName" class="block text-sm font-medium text-dark-2 mb-1">姓名</label>
+                        <input type="text" id="editName" class="w-full px-4 py-2 border border-light-2 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" placeholder="请输入姓名">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="editCollege" class="block text-sm font-medium text-dark-2 mb-1">学院</label>
+                        <input type="text" id="editCollege" class="w-full px-4 py-2 border border-light-2 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" placeholder="请输入学院">
+                    </div>
+
+                    <div class="mb-6">
+                        <label for="editMobile" class="block text-sm font-medium text-dark-2 mb-1">手机号</label>
+                        <input type="text" id="editMobile" class="w-full px-4 py-2 border border-light-2 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" placeholder="请输入手机号">
+                    </div>
+
+                    <button type="submit" class="w-full py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-custom">
+                        保存修改
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 模拟活动数据（同首页）
+        const activities = [ /* 同首页activities数据 */ ];
+
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化页面数据
+            initUserDetailPage();
+
+            // 标签页切换
+            initDynamicTabs();
+
+            // 编辑资料模态框
+            initEditProfileModal();
+
+            // 初始化统计图表
+            initActivityStatsChart();
+        });
+
+        // 初始化用户详情页数据
+        function initUserDetailPage() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const userActions = JSON.parse(localStorage.getItem('userActions')) || [];
+            const favoriteActivities = JSON.parse(localStorage.getItem('favoriteActivities')) || [];
+            const participatedActivities = JSON.parse(localStorage.getItem('participatedActivities')) || [];
+
+            // 获取当前用户完整信息
+            const user = users.find(u => u.username === currentUser.username);
+            if (user) {
+                // 显示用户基本信息
+                document.getElementById('userNameDetail').textContent = user.username;
+                document.getElementById('userId').textContent = `学号：${user.userId || '未设置'}`;
+                document.getElementById('userCollege').textContent = user.college || '未设置';
+                document.getElementById('userRegDate').textContent = `注册时间：${user.registeredAt.split('T')[0]}`;
+
+                // 计算参与活动和登录次数
+                document.getElementById('activityCount').textContent = `参与活动：${participatedActivities.length} 场`;
+                document.getElementById('loginCount').textContent = `登录次数：${userActions.filter(a => a.action === 'login').length} 次`;
+
+                // 设置用户头像（可使用Gravatar或随机图片）
+                const avatarEl = document.getElementById('userAvatarDetail');
+                if (user.avatar) {
+                    avatarEl.src = user.avatar;
+                } else {
+                    avatarEl.src = `https://picsum.photos/100/100?random=${users.indexOf(user) + 1}`;
+                }
+
+                // 渲染参与活动
+                renderParticipatedActivities(participatedActivities);
+
+                // 渲染操作记录
+                renderActionRecords(userActions);
+
+                // 渲染收藏活动
+                renderFavoriteActivities(favoriteActivities);
+            }
+        }
+
+        // 初始化动态标签页切换
+        function initDynamicTabs() {
+            const tabs = document.querySelectorAll('.dynamic-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // 移除所有标签页的激活状态
+                    tabs.forEach(t => {
+                        t.classList.remove('text-primary', 'border-primary');
+                        t.classList.add('text-dark-2');
+                    });
+
+                    // 添加当前标签页的激活状态
+                    this.classList.remove('text-dark-2');
+                    this.classList.add('text-primary', 'border-b-2', 'border-primary');
+
+                    // 隐藏所有内容
+                    document.querySelectorAll('.dynamic-content').forEach(content => {
+                        content.classList.add('hidden');
+                    });
+
+                    // 显示当前标签页内容
+                    const tabId = this.getAttribute('data-tab') + 'Tab';
+                    document.getElementById(tabId).classList.remove('hidden');
+                });
+            });
+        }
+
+        // 渲染参与活动
+        function renderParticipatedActivities(activities) {
+            const container = document.getElementById('participatedActivities');
+            container.innerHTML = '';
+
+            if (activities.length === 0) {
+                container.innerHTML = '<div class="col-span-full text-center py-8 text-dark-2">暂无参与的活动</div>';
+                return;
+            }
+
+            activities.forEach(activityId => {
+                const activity = activities.find(a => a.id === activityId);
+                if (activity) {
+                    const card = document.createElement('div');
+                    card.className = 'bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-custom';
+                    card.innerHTML = `
+                        <img src="${activity.image}" alt="${activity.title}" class="w-full h-36 object-cover">
+                        <div class="p-4">
+                            <h4 class="font-medium">${activity.title}</h4>
+                            <p class="text-sm text-dark-2 mt-1">${activity.date} ${activity.time}</p>
+                            <p class="text-xs bg-light-1 px-2 py-1 rounded-full text-dark-2 mt-2 inline-block">
+                                <i class="fa fa-map-marker mr-1"></i> ${activity.location}
+                            </p>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                }
+            });
+        }
+
+        // 渲染操作记录
+        function renderActionRecords(actions) {
+            const container = document.getElementById('actionRecords');
+            container.innerHTML = '';
+
+            if (actions.length === 0) {
+                container.innerHTML = '<div class="py-4 text-dark-2">暂无操作记录</div>';
+                return;
+            }
+
+            // 按时间倒序排列
+            const sortedActions = actions.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+            sortedActions.slice(0, 10).forEach(action => {
+                const record = document.createElement('div');
+                record.className = 'p-3 bg-light-1 rounded-lg';
+                record.innerHTML = `
+                    <div class="flex items-start">
+                        <div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center mr-3 flex-shrink-0">
+                            ${getActionIcon(action.action)}
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium">${getActionText(action.action)}</p>
+                            <p class="text-xs text-dark-2">${new Date(action.timestamp).toLocaleString()}</p>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(record);
+            });
+        }
+
+        // 获取操作图标
+        function getActionIcon(action) {
+            switch (action) {
+                case 'login':
+                    return '<i class="fa fa-sign-in"></i>';
+                case 'logout':
+                    return '<i class="fa fa-sign-out"></i>';
+                case 'viewActivity':
+                    return '<i class="fa fa-eye"></i>';
+                case 'favoriteActivity':
+                    return '<i class="fa fa-star"></i>';
+                case 'participateActivity':
+                    return '<i class="fa fa-ticket"></i>';
+                default:
+                    return '<i class="fa fa-cog"></i>';
+            }
+        }
+
+        // 获取操作文本
+        function getActionText(action) {
+            switch (action) {
+                case 'login':
+                    return '登录系统';
+                case 'logout':
+                    return '退出登录';
+                case 'viewActivity':
+                    return '查看活动详情';
+                case 'favoriteActivity':
+                    return '收藏了活动';
+                case 'participateActivity':
+                    return '参与了活动';
+                default:
+                    return '执行了操作';
+            }
+        }
+
+        // 渲染收藏活动
+        function renderFavoriteActivities(activities) {
+            const container = document.getElementById('favoriteActivities');
+            container.innerHTML = '';
+
+            if (activities.length === 0) {
+                container.innerHTML = '<div class="col-span-full text-center py-8 text-dark-2">暂无收藏的活动</div>';
+                return;
+            }
+
+            activities.forEach(activityId => {
+                const activity = activities.find(a => a.id === activityId);
+                if (activity) {
+                    const card = document.createElement('div');
+                    card.className = 'bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-custom';
+                    card.innerHTML = `
+                        <img src="${activity.image}" alt="${activity.title}" class="w-full h-36 object-cover">
+                        <div class="p-4">
+                            <h4 class="font-medium">${activity.title}</h4>
+                            <p class="text-sm text-dark-2 mt-1">${activity.date} ${activity.time}</p>
+                            <div class="flex justify-between items-center mt-3">
+                                <span class="text-xs bg-light-1 px-2 py-1 rounded-full text-dark-2">
+                                    <i class="fa fa-user-o mr-1"></i> ${activity.participants}/${activity.capacity}
+                                </span>
+                                <button class="text-danger hover:text-danger/80" onclick="unfavoriteActivity(${activity.id})">
+                                    <i class="fa fa-star"></i> 取消收藏
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                }
+            });
+        }
+
+        // 取消收藏活动
+        function unfavoriteActivity(activityId) {
+            let favoriteActivities = JSON.parse(localStorage.getItem('favoriteActivities')) || [];
+            favoriteActivities = favoriteActivities.filter(id => id !== activityId);
+            localStorage.setItem('favoriteActivities', JSON.stringify(favoriteActivities));
+            renderFavoriteActivities(favoriteActivities);
+
+            // 记录操作
+            recordUserAction('unfavoriteActivity', {
+                activityId
+            });
+        }
+
+        // 初始化活动统计图表
+        function initActivityStatsChart() {
+            const ctx = document.getElementById('activityStatsChart').getContext('2d');
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.username === currentUser.username);
+
+            // 模拟用户活动类型统计
+            const activityTypes = ['学术讲座', '文体活动', '志愿公益', '科技创新', '竞赛比赛'];
+            const typeData = activityTypes.map(type => {
+                return Math.floor(Math.random() * 10);
+            });
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: activityTypes,
+                    datasets: [{
+                        data: typeData,
+                        backgroundColor: [
+                            '#165DFF',
+                            '#36BFFA',
+                            '#FF7D00',
+                            '#00B42A',
+                            '#F53F3F'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        },
+                        title: {
+                            display: true,
+                            text: '您参与的活动类型分布'
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+        }
+
+        // 初始化编辑资料模态框
+        function initEditProfileModal() {
+            const modal = document.getElementById('editProfileModal');
+            const modalContent = document.getElementById('editModalContent');
+            const openBtn = document.getElementById('editProfileBtn');
+            const closeBtn = document.getElementById('closeEditModal');
+            const form = document.getElementById('editProfileForm');
+
+            openBtn.addEventListener('click', function() {
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modalContent.classList.remove('scale-95', 'opacity-0');
+                    modalContent.classList.add('scale-100', 'opacity-100');
+
+                    // 填充当前用户信息
+                    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                    const users = JSON.parse(localStorage.getItem('users')) || [];
+                    const user = users.find(u => u.username === currentUser.username);
+                    if (user) {
+                        document.getElementById('editName').value = user.username;
+                        document.getElementById('editCollege').value = user.college || '';
+                        document.getElementById('editMobile').value = user.mobile || '';
+                    }
+                }, 10);
+            });
+
+            closeBtn.addEventListener('click', function() {
+                modalContent.classList.remove('scale-100', 'opacity-100');
+                modalContent.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            });
+
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modalContent.classList.remove('scale-100', 'opacity-100');
+                    modalContent.classList.add('scale-95', 'opacity-0');
+                    setTimeout(() => {
+                        modal.classList.add('hidden');
+                    }, 300);
+                }
+            });
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const name = document.getElementById('editName').value;
+                const college = document.getElementById('editCollege').value;
+                const mobile = document.getElementById('editMobile').value;
+
+                // 更新本地存储中的用户信息
+                let users = JSON.parse(localStorage.getItem('users')) || [];
+                let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+                users = users.map(user => {
+                    if (user.username === currentUser.username) {
+                        return {
+                            ...user,
+                            username: name,
+                            college,
+                            mobile,
+                            updatedAt: new Date().toISOString()
+                        };
+                    }
+                    return user;
+                });
+
+                localStorage.setItem('users', JSON.stringify(users));
+                currentUser.username = name;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+                // 刷新页面显示
+                initUserDetailPage();
+
+                // 关闭模态框
+                modalContent.classList.remove('scale-100', 'opacity-100');
+                modalContent.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    alert('资料更新成功');
+                }, 300);
+            });
+        }
+
+        // 记录用户操作
+        function recordUserAction(action, data = {}) {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                const userActions = JSON.parse(localStorage.getItem('userActions')) || [];
+                userActions.push({
+                    username: currentUser.username,
+                    action,
+                    data,
+                    timestamp: new Date().toISOString()
+                });
+
+                // 限制记录数量
+                if (userActions.length > 100) {
+                    userActions.shift();
+                }
+
+                localStorage.setItem('userActions', JSON.stringify(userActions));
+            }
+        }
+    </script>
+</body>
+
+</html>
