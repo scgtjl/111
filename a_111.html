@@ -186,51 +186,6 @@
                     </div>
                 </div>
 
-                <!-- 活动筛选 -->
-                <div class="bg-white p-4 rounded-xl shadow-sm mb-8">
-                    <div class="flex flex-wrap gap-4">
-                        <div class="w-full md:w-auto">
-                            <label class="block text-sm font-medium text-dark-2 mb-1">活动类型</label>
-                            <select id="typeFilter" class="w-full md:w-48 px-4 py-2 border border-light-2 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
-                                <option value="all">全部类型</option>
-                                <option value="academic">学术讲座</option>
-                                <option value="culture">文体活动</option>
-                                <option value="volunteer">志愿公益</option>
-                                <option value="tech">科技创新</option>
-                                <option value="competition">竞赛比赛</option>
-                            </select>
-                        </div>
-                        <div class="w-full md:w-auto">
-                            <label class="block text-sm font-medium text-dark-2 mb-1">时间范围</label>
-                            <select id="timeFilter" class="w-full md:w-48 px-4 py-2 border border-light-2 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
-                                <option value="all">全部时间</option>
-                                <option value="today">今天</option>
-                                <option value="week">本周</option>
-                                <option value="month">本月</option>
-                                <option value="future">未来</option>
-                            </select>
-                        </div>
-                        <div class="w-full md:w-auto">
-                            <label class="block text-sm font-medium text-dark-2 mb-1">学院</label>
-                            <select id="collegeFilter" class="w-full md:w-48 px-4 py-2 border border-light-2 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
-                                <option value="all">全部学院</option>
-                                <option value="computer">计算机学院</option>
-                                <option value="business">商学院</option>
-                                <option value="art">艺术学院</option>
-                                <option value="science">理学院</option>
-                                <option value="engineering">工学院</option>
-                            </select>
-                        </div>
-                        <div class="w-full md:flex-1 flex items-end">
-                            <label class="block text-sm font-medium text-dark-2 mb-1 w-full">搜索</label>
-                            <div class="relative w-full">
-                                <input type="text" id="searchInput" placeholder="搜索活动名称、地点..." class="w-full px-4 py-2 pl-10 border border-light-2 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
-                                <i class="fa fa-search absolute left-3 top-3 text-dark-2"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- 活动卡片列表 -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="activityCards">
                     <!-- 活动卡片将通过JS动态生成 -->
@@ -777,11 +732,6 @@
                                 <span class="text-xs bg-light-1 px-2 py-1 rounded-full text-dark-2">
                                     <i class="fa fa-map-marker mr-1"></i> ${activity.location}
                                 </span>
-                            </div>
-                            <a href="c_111.html" class="text-primary font-medium text-sm hover:underline" onclick="viewActivityDetail(${activity.id})">
-                                查看详情
-                            </a>
-                        </div>
                     </div>
                 `;
 
