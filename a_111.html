@@ -31,8 +31,8 @@
                     <!-- 桌面导航 -->
                     <nav class="hidden md:flex space-x-8">
                         <a href="#" class="text-dark-2 hover:text-primary font-medium transition-custom">首页</a>
-                        <a href="#activities" class="text-dark-2 hover:text-primary font-medium transition-custom">活动列表</a>
                         <a href="#statistics" class="text-dark-2 hover:text-primary font-medium transition-custom">数据统计</a>
+                        <a href="#activities" class="text-dark-2 hover:text-primary font-medium transition-custom">活动列表</a>
                         <a href="#about" class="text-dark-2 hover:text-primary font-medium transition-custom">关于我们</a>
                     </nav>
 
@@ -259,8 +259,8 @@
                     <h3 class="text-lg font-semibold mb-4">快速链接</h3>
                     <ul class="space-y-2">
                         <li><a href="#" class="text-white/70 hover:text-white transition-custom">首页</a></li>
-                        <li><a href="#activities" class="text-white/70 hover:text-white transition-custom">数据统计</a></li>
-                        <li><a href="#statistics" class="text-white/70 hover:text-white transition-custom">活动列表</a></li>
+                        <li><a href="#statistics" class="text-white/70 hover:text-white transition-custom">数据统计</a></li>
+                        <li><a href="#activities" class="text-white/70 hover:text-white transition-custom">活动列表</a></li>
                         <li><a href="#about" class="text-white/70 hover:text-white transition-custom">关于我们</a></li>
                     </ul>
                 </div>
@@ -745,7 +745,7 @@
             localStorage.setItem('selectedActivityId', id);
 
             // 跳转到活动详情页
-            window.location.href = '/scgtjl/111/edit/main/activity-detail.html';
+            window.location.href = 'activity-detail.html';
         }
 
         // 初始化登录/注册模态框
